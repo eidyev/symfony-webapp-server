@@ -10,26 +10,8 @@ services:
 
   # --- Servicio de WebServer - desarrollo ---
   dev-server:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-      target: development
-      args:
-        # Variables de construcción (build-time)
-        - UID=${UID:-1000}
-        - GID=${GID:-1000}
-        # Variables opcionales de personalización (descomenta para usar):
-        - PHP_VERSION=8.3          # Versión de PHP (default: 8.3)
-        - LOCALE=es_ES.UTF-8       # Locale del sistema (default: es_ES.UTF-8)
-        - TIMEZONE=America/Havana  # Zona horaria (default: America/Havana)
     image: symfony-webapp-server:php-8.3-dev
     container_name: webdev
-    env_file:
-      - ./.env
-    environment:
-      # Sobrescribe MAILER_DSN solo para este servicio
-      - MAILER_DSN=smtp://mailpit:1025
-      - DEFAULT_URI=http://localhost:8080/
     ports:
       - "8080:80"
     volumes:
@@ -45,15 +27,6 @@ services:
 
   # --- Servicio de WebServer - producción ---
   prod-server:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-      target: production
-      args:
-        # Variables opcionales de personalización (descomenta para usar):
-        - PHP_VERSION=8.3          # Versión de PHP (default: 8.3)
-        - LOCALE=es_ES.UTF-8       # Locale del sistema (default: es_ES.UTF-8)
-        - TIMEZONE=America/Havana  # Zona horaria (default: America/Havana)
     image: symfony-webapp-server:php-8.3-prod
     container_name: webprod
     env_file:
