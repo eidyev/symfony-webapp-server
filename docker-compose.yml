@@ -1,0 +1,132 @@
+# --- EXAMPLE --- docker-compose.yml -----------------------------------------------------------------------------
+
+# --- Red privada ---
+networks:
+  net:
+    driver: bridge
+
+# --- Servicios ---
+services:
+
+  # --- Servicio de WebServer - desarrollo ---
+  dev-server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: development
+      args:
+        # Variables de construcción (build-time)
+        - UID=${UID:-1000}
+        - GID=${GID:-1000}
+        # Variables opcionales de personalización (descomenta para usar):
+        # - PHP_VERSION=8.3          # Versión de PHP (default: 8.3)
+        # - LOCALE=es_ES.UTF-8       # Locale del sistema (default: es_ES.UTF-8)
+        # - TIMEZONE=America/Havana  # Zona horaria (default: America/Havana)
+    image: symfony-webapp-dev
+    container_name: webdev
+    env_file:
+      - ./.env
+    environment:
+      # Sobrescribe MAILER_DSN solo para este servicio
+      - MAILER_DSN=smtp://mailpit:1025
+      - DEFAULT_URI=http://localhost:8080/
+    ports:
+      - "8080:80"
+    volumes:
+      # Montar la carpeta de la app
+      - ./webapp:/var/www/html
+      - ./config/php.ini-dev:/etc/php/8.3/fpm/php.ini
+    depends_on:
+      - db
+    networks:
+      - net
+    profiles:
+      - development
+
+  # --- Servicio de WebServer - producción ---
+  prod-server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: production
+      args:
+        # Variables opcionales de personalización (descomenta para usar):
+        # - PHP_VERSION=8.3          # Versión de PHP (default: 8.3)
+        # - LOCALE=es_ES.UTF-8       # Locale del sistema (default: es_ES.UTF-8)
+        # - TIMEZONE=America/Havana  # Zona horaria (default: America/Havana)
+    image: symfony-webapp-prod
+    container_name: webprod
+    env_file:
+      - ./.env
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    networks:
+      - net
+    restart: unless-stopped
+    profiles:
+      - production
+
+
+  # --- Servicio de Base de Datos ---
+  db:
+    image: postgres:16-alpine # Usamos la imagen ligera de Alpine
+    container_name: database
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-d", "${DB_DATABASE:-app}", "-U", "${DB_USER:-app}" ]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Volumen para persistir los datos
+#    ports:
+#      - "5433:5432"
+    networks:
+      - net
+    profiles:
+      - development
+      - production
+
+  # --- Servicio de cache (Redis) ---
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    volumes:
+      - redis_data:/data
+    networks:
+      - net
+    profiles:
+      - development
+      - production
+
+
+  ########################################
+  # SERVICIOS SOLO PARA DESARROLLO
+  ########################################
+  mailpit:
+    image: axllent/mailpit
+    container_name: mailpit
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    ports:
+      - "1025:1025" # Puerto SMTP para la app
+      - "8025:8025" # Interfaz web de Mailpit
+    networks:
+      - net
+    profiles:
+      - development # Mailpit solo corre en desarrollo
+
+
+# --- Volúmenes Nombrados ---
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
