@@ -15,7 +15,7 @@ Dos variantes: **development** (con Xdebug y Symfony CLI) y **production** (opti
 
 
 
-Imagen Docker lista para producción con **Nginx + PHP 8.3 FPM + Supervisor** optimizada para aplicaciones Symfony. Incluye dos targets: **development** (con Xdebug y herramientas de desarrollo) y **production** (optimizada para rendimiento).
+Imagen Docker lista para producción con **Nginx + PHP 8.X FPM + Supervisor** optimizada para aplicaciones Symfony. Incluye dos targets: **development** (con Xdebug y herramientas de desarrollo) y **production** (optimizada para rendimiento).
 
 ---
 
@@ -24,7 +24,7 @@ Imagen Docker lista para producción con **Nginx + PHP 8.3 FPM + Supervisor** op
 ### Stack Base
 - **Debian Bookworm** (slim)
 - **Nginx** - Servidor web
-- **PHP 8.3-FPM** - Con más de 50 extensiones instaladas, not e va a faltar ninguna
+- **PHP 8.X-FPM** - Con más de 50 extensiones instaladas, no te va a faltar ninguna
 - **Supervisor** - Gestión de procesos
 - **Composer** - Gestor de dependencias PHP
 
@@ -34,7 +34,7 @@ La imagen intenta instalar **más de 50 extensiones PHP**. El sistema de instala
 
 - ✅ **No falla** si una extensión no está disponible para tu versión de PHP
 - 📊 **Muestra un resumen** en los logs de construcción
-- 🔄 **Compatible** con PHP 8.0, 8.1, 8.2, 8.3, 8.4+
+- 🔄 **Compatible** con PHP 8.0, 8.1, 8.2, 8.3, 8.4, 8.5
 
 **Extensiones principales:**
 ```

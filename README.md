@@ -4,14 +4,14 @@
 
 # 🚀 Symfony Webapp Server
 
-A production-ready Docker image for Symfony applications with **Nginx + PHP 8.3 FPM + Supervisor**. Includes two optimized targets: **development** (with Xdebug and development tools) and **production** (optimized for performance).
+A production-ready Docker image for Symfony applications with **Nginx + PHP 8.X FPM + Supervisor**. Includes two optimized targets: **development** (with Xdebug and development tools) and **production** (optimized for performance).
 
 ## 🌟 Features
 
 ### Core Stack
 - **Debian Bookworm** (slim)
 - **Nginx** - High-performance web server
-- **PHP 8.3-FPM** - With 50+ pre-installed extensions
+- **PHP 8.X-FPM** - With 50+ pre-installed extensions
 - **Supervisor** - Process management
 - **Composer** - PHP dependency manager
 
@@ -21,7 +21,7 @@ Our image includes **50+ PHP extensions** with a **fault-tolerant** installation
 
 - ✅ **No failures** if an extension isn't available for your PHP version
 - 📊 **Shows a summary** in build logs
-- 🔄 **Compatible** with PHP 8.0, 8.1, 8.2, 8.3, 8.4+
+- 🔄 **Compatible** with PHP 8.0, 8.1, 8.2, 8.3, 8.4, 8.5
 
 **Main extensions:**
 ```

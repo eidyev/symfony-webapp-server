@@ -13,10 +13,13 @@ Esta guía proporciona instrucciones detalladas para usar la imagen Docker de Sy
 
 ```bash
     docker run -d \
-      -p 8080:80 \
-      -v $(pwd)/mi-aplicacion:/var/www/html \
-      -e APP_ENV=dev \
-      --name symfony-dev \
+      -p 8081:80 \
+      -v $(pwd)/sfwebapp:/var/www/html \
+      -e LOCALE=es_ES.UTF-8 \
+      -e TIMEZONE=America/Havana \
+      -e UID=$(id -u) \
+      -e GID=$(id -g) \
+      --name sftest80dev \
       eidyev/symfony-webapp-server:php-8.3-dev
 ```
 
