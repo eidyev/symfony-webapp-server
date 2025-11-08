@@ -1,4 +1,19 @@
-# 🚀 Imagen Docker Base para Symfony
+![Docker Pulls](https://img.shields.io/docker/pulls/eidyev/symfony-webapp-server)
+![Image Size](https://img.shields.io/docker/image-size/eidyev/symfony-webapp-server/latest)
+![GitHub Stars](https://img.shields.io/github/stars/eidyev/symfony-webapp-server?style=social)
+
+# 🚀 Imagen Docker Base para Aplicaciones de Symfony > 6
+
+Imagen Docker lista para producción para apps **Symfony** con **Nginx + PHP‑FPM + Supervisor + Composer**.
+Dos variantes: **development** (con Xdebug y Symfony CLI) y **production** (optimizada con OPcache).
+
+## 🏷️ Etiquetas Disponibles
+
+- Desarrollo: `php8.0-dev`, `php8.1-dev`, `php8.2-dev`, `php8.3-dev`, `php8.4-dev`, `latest-dev`
+- Producción: `php8.0-prod`, `php8.1-prod`, `php8.2-prod`, `php8.3-prod`, `php8.4-prod`, `latest-prod`, `latest`
+
+
+
 
 Imagen Docker lista para producción con **Nginx + PHP 8.3 FPM + Supervisor** optimizada para aplicaciones Symfony. Incluye dos targets: **development** (con Xdebug y herramientas de desarrollo) y **production** (optimizada para rendimiento).
 
@@ -130,7 +145,7 @@ docker run -d \
   -v $(pwd)/mi-app:/var/www/html \
   -e APP_ENV=dev \
   --name symfony-dev \
-  symfony-dev
+  eidyev/symfony-webapp-server:php8.4-dev
 
 # Producción
 docker run -d \
@@ -138,31 +153,11 @@ docker run -d \
   -v $(pwd)/mi-app:/var/www/html \
   -e APP_ENV=prod \
   --name symfony-prod \
-  symfony-prod
+  eidyev/symfony-webapp-server:php8.4-prod
 ```
 
 ---
 
-## 📁 Estructura del Proyecto
-
-```
-symfony-webapp/
-├── config/
-│   ├── nginx-default.conf      # Configuración Nginx
-│   ├── supervisord.conf         # Configuración Supervisor
-│   ├── php.ini-dev             # PHP config desarrollo
-│   └── php.ini-prod            # PHP config producción
-├── webapp/                      # ⚠️ MONTA TU APP AQUÍ
-│   └── (tu aplicación Symfony)
-├── .dockerignore
-├── .env                         # Variables de entorno
-├── docker-compose.yml           # Orquestación de servicios
-├── Dockerfile                   # Multi-stage build
-├── entrypoint.sh               # Script de inicialización
-└── README.md                    # Este archivo
-```
-
----
 
 ## ⚙️ Configuración
 
@@ -173,6 +168,12 @@ Edita el archivo `.env` con tus valores:
 ```bash
 # Perfil Docker Compose
 COMPOSE_PROFILES=development  # o "production"
+
+# Locale del sistema operativo
+LOCALE=es_ES.UTF-8
+
+# Zona horaria del contenedor
+TIMEZONE=America/Havana
 
 # Usuario/Grupo (desarrollo)
 UID=1000

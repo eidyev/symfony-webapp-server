@@ -1,3 +1,8 @@
+![Docker Pulls](https://img.shields.io/docker/pulls/eidyev/symfony-webapp-server)
+![Image Size](https://img.shields.io/docker/image-size/eidyev/symfony-webapp-server/latest)
+![GitHub Stars](https://img.shields.io/github/stars/eidyev/symfony-webapp-server?style=social)
+
+
 # 📖 How to Use Symfony Webapp Server
 
 This guide provides detailed instructions for using the Symfony Webapp Server Docker image in different environments.
@@ -7,23 +12,23 @@ This guide provides detailed instructions for using the Symfony Webapp Server Do
 ### Development Environment
 
 ```bash
-docker run -d \
-  -p 8080:80 \
-  -v $(pwd)/my-app:/var/www/html \
-  -e APP_ENV=dev \
-  --name symfony-dev \
-  eidyev/symfony-webapp-server:php-8.3-dev
+    docker run -d \
+      -p 8080:80 \
+      -v $(pwd)/my-app:/var/www/html \
+      -e APP_ENV=dev \
+      --name symfony-dev \
+      eidyev/symfony-webapp-server:php-8.3-dev
 ```
 
 ### Production Environment
 
 ```bash
-docker run -d \
-  -p 80:80 \
-  -v $(pwd)/my-app:/var/www/html \
-  -e APP_ENV=prod \
-  --name symfony-prod \
-  eidyev/symfony-webapp-server:php-8.3-prod
+    docker run -d \
+      -p 80:80 \
+      -v $(pwd)/my-app:/var/www/html \
+      -e APP_ENV=prod \
+      --name symfony-prod \
+      eidyev/symfony-webapp-server:php-8.3-prod
 ```
 
 ## 🚀 Docker Compose Setup
@@ -166,7 +171,7 @@ Xdebug is pre-configured in the development image. Use these IDE settings:
 ### Building Custom Image
 
 ```bash
-docker build --target production -t my-symfony-app .
+  docker build --target production -t my-symfony-app .
 ```
 
 ### Kubernetes Deployment

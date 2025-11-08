@@ -1,0 +1,19 @@
+version: "3.9"
+services:
+  web:
+    image: eidyev/symfony-webapp-server:php8.4-prod
+    volumes:
+      - ./webapp:/var/www/html
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: "0"
+    networks: [app]
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on: [web]
+    networks: [app]
+networks:
+  app:
+    driver: bridge

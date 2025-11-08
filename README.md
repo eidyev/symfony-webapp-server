@@ -1,3 +1,7 @@
+![Docker Pulls](https://img.shields.io/docker/pulls/eidyev/symfony-webapp-server)
+![Image Size](https://img.shields.io/docker/image-size/eidyev/symfony-webapp-server/latest)
+![GitHub Stars](https://img.shields.io/github/stars/eidyev/symfony-webapp-server?style=social)
+
 # 🚀 Symfony Webapp Server
 
 A production-ready Docker image for Symfony applications with **Nginx + PHP 8.3 FPM + Supervisor**. Includes two optimized targets: **development** (with Xdebug and development tools) and **production** (optimized for performance).

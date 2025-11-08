@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  web:
+    image: eidyev/symfony-webapp-server:php8.4-dev
+    container_name: symfony-dev
+    ports:
+      - "8080:80"
+    volumes:
+      - ./webapp:/var/www/html
+    environment:
+      APP_ENV: dev
+      LOCALE: ${LOCALE:-es_ES.UTF-8}
+      TIMEZONE: ${TIMEZONE:-America/Havana}
+      UID: ${UID:-1000}
+      GID: ${GID:-1000}
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"

@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  web:
+    image: eidyev/symfony-webapp-server:php8.4-prod
+    volumes:
+      - ./webapp:/var/www/html
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: "0"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.symfony.rule=Host(`mywebapp.example.com`)"
+      - "traefik.http.routers.symfony.entrypoints=web"
+    networks: [proxy]
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    networks: [proxy]
+
+networks:
+  proxy:
+    external: true

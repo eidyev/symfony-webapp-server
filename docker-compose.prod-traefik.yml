@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  web:
+    image: eidyev/symfony-webapp-server:php8.4-prod
+    container_name: symfony-prod
+    volumes:
+      - ./webapp:/var/www/html
+    environment:
+      APP_ENV: prod
+      APP_DEBUG: "0"
+      LOCALE: ${LOCALE:-es_ES.UTF-8}
+      TIMEZONE: ${TIMEZONE:-America/Havana}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.symfony.rule=Host(`mywebapp.example.com`)"
+      - "traefik.http.routers.symfony.entrypoints=websecure"
+      - "traefik.http.routers.symfony.tls=true"
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
