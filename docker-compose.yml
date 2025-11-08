@@ -24,8 +24,6 @@ services:
         - TIMEZONE=America/Havana  # Zona horaria (default: America/Havana)
     image: symfony-webapp-server:php-8.3-dev
     container_name: webdev
-    env_file:
-      - ./.env
     environment:
       # Sobrescribe MAILER_DSN solo para este servicio
       - MAILER_DSN=smtp://mailpit:1025
@@ -43,6 +41,7 @@ services:
     profiles:
       - development
 
+
   # --- Servicio de WebServer - producción ---
   prod-server:
     build:
@@ -56,8 +55,6 @@ services:
         - TIMEZONE=America/Havana  # Zona horaria (default: America/Havana)
     image: symfony-webapp-server:php-8.3-prod
     container_name: webprod
-    env_file:
-      - ./.env
     ports:
       - "8081:80"
     depends_on:
