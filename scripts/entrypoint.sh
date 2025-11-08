@@ -5,10 +5,10 @@ echo "=========================================="
 echo "  Symfony Web Server - Entrypoint"
 echo "=========================================="
 
-DEFAULT_LOCALE=${LOCALE:-es_ES.UTF-8}
-DEFAULT_TIMEZONE=${TIMEZONE:-America/Havana}
-DEFAULT_UID=${UID:-1000}
-DEFAULT_GID=${GID:-1000}
+DEFAULT_LOCALE="es_ES.UTF-8"
+DEFAULT_TIMEZONE="America/Havana"
+DEFAULT_UID="1000"
+DEFAULT_GID="1000"
 
 # Locale
 if [ -n "$LOCALE" ] && [ "$LOCALE" != "$DEFAULT_LOCALE" ]; then
@@ -19,23 +19,30 @@ if [ -n "$LOCALE" ] && [ "$LOCALE" != "$DEFAULT_LOCALE" ]; then
   export LANG="$LOCALE" LC_ALL="$LOCALE"
 fi
 
-# Timezone
+# Timezone (Sistema + PHP-FPM + PHP-CLI)
 if [ -n "$TIMEZONE" ] && [ "$TIMEZONE" != "$DEFAULT_TIMEZONE" ]; then
   echo "→ Configurando timezone a $TIMEZONE"
+
+  # Sistema
   ln -sf "/usr/share/zoneinfo/$TIMEZONE" /etc/localtime
   echo "$TIMEZONE" > /etc/timezone
-  dpkg-reconfigure -f noninteractive tzdata
+  dpkg-reconfigure -f noninteractive tzdata >/dev/null 2>&1 || true
+
+  # PHP-FPM
+  sed -i "s|^;*date.timezone =.*|date.timezone = ${TIMEZONE}|g" /etc/php/${PHP_VERSION}/fpm/php.ini
+
+  # PHP-CLI
+  sed -i "s|^;*date.timezone =.*|date.timezone = ${TIMEZONE}|g" /etc/php/${PHP_VERSION}/cli/php.ini
 fi
 
 # UID/GID (dev)
-if [ "$DEFAULT_UID" != "1000" ] || [ "$DEFAULT_GID" != "1000" ]; then
-  echo "→ Configurando www-data UID:$DEFAULT_UID GID:$DEFAULT_GID"
-  usermod -u "$DEFAULT_UID" www-data 2>/dev/null || true
-  groupmod -g "$DEFAULT_GID" www-data 2>/dev/null || true
-  chown -R www-data:www-data /var/www/html
+if [ "$UID" != "$DEFAULT_UID" ] || [ "$GID" != "$DEFAULT_GID" ]; then
+  echo "→ Configurando www-data UID:$UID GID:$GID"
+  usermod -u "$UID" www-data 2>/dev/null || true
+  groupmod -g "$GID" www-data 2>/dev/null || true
+  chown -R www-data:www-data /var/www/html || true
 fi
 
-# Info PHP
 echo -n "→ PHP runtime: "
 php -v | head -n1
 
@@ -56,26 +63,28 @@ if [ -f "composer.json" ]; then
     echo "✓ Dependencias ya instaladas (vendor/ encontrado)"
   fi
 
-  # Permisos más seguros (evita 777 en prod)
   if [ -d "var" ]; then
-    chown -R www-data:www-data var
-    chmod -R 775 var
+    chown -R www-data:www-data var && chmod -R 775 var
   fi
+
   if [ -d "public/uploads" ]; then
-    chown -R www-data:www-data public/uploads
-    chmod -R 775 public/uploads
+    chown -R www-data:www-data public/uploads && chmod -R 775 public/uploads
   fi
 
   if [ "$APP_ENV" = "prod" ]; then
-    echo "→ Limpiando y calentando caché de producción..."
+    echo "→ Cache: clear + warmup (prod)"
     php bin/console cache:clear --env=prod --no-debug || true
     php bin/console cache:warmup --env=prod --no-debug || true
   fi
 fi
 
 echo "→ Iniciando servicios con supervisor..."
+/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf &
+
 if [ $# -gt 0 ]; then
+  echo "→ Ejecutando comando del usuario: $@"
   exec "$@"
-else
-  exec /usr/bin/supervisord -n -c /etc/supervisor/conf.d/supervisord.conf
 fi
+
+# Mantener contenedor vivo aunque se cierren shells
+wait -n
