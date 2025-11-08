@@ -530,4 +530,5 @@ Si este proyecto te ayuda, considera darle una estrella ⭐ en GitHub.
 
 ---
 
-**Última actualización:** 2025-11-07
+##  Enlace a Docker Hub
+https://hub.docker.com/r/eidyev/symfony-webapp-server
