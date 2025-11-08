@@ -116,14 +116,24 @@ symfony-webapp-server/
 │   ├── supervisord.conf        # Supervisor configuration
 │   ├── php.ini-dev             # PHP config for development
 │   └── php.ini-prod            # PHP config for production
+├── scripts/                    # Scripts
+│   └── entrypoint.sh           # Initialization script
 ├── webapp/                     # ⚠️ MOUNT YOUR APP HERE
 │   └── (your Symfony app)
 ├── .dockerignore
 ├── .env                       # Environment variables
 ├── docker-compose.yml         # Service orchestration
 ├── Dockerfile                 # Multi-stage build
-└── entrypoint.sh              # Initialization script
+
 ```
+
+## ℹ️ Notes
+- Container expects your symfony app in `/var/www/html/`
+- Container expects **webroot at `/var/www/html/public`**.
+- HTTPS should be handled by your reverse proxy (Traefik / Cloudflare Tunnel / Caddy).
+
+
+
 
 ## 🔧 Configuration
 

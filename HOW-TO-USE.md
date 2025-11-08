@@ -18,6 +18,19 @@ This guide provides detailed instructions for using the Symfony Webapp Server Do
       -e APP_ENV=dev \
       --name symfony-dev \
       eidyev/symfony-webapp-server:php-8.3-dev
+      
+      
+   docker run -d  \
+      -p 8083:80   
+      -v $(pwd)/sfwebapp:/var/www/html \
+      -e LOCALE=es_ES.UTF-8  \
+      -e TIMEZONE=Europe/Madrid  \
+      -e UID=$(id -u) \
+      -e GID=$(id -g) \ 
+      --name mysfwebappdev \ 
+      eidyev/symfony-webapp-server:php-8.3-dev   
+      
+      
 ```
 
 ### Production Environment
@@ -26,7 +39,6 @@ This guide provides detailed instructions for using the Symfony Webapp Server Do
     docker run -d \
       -p 80:80 \
       -v $(pwd)/my-app:/var/www/html \
-      -e APP_ENV=prod \
       --name symfony-prod \
       eidyev/symfony-webapp-server:php-8.3-prod
 ```
