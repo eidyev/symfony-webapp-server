@@ -15,7 +15,7 @@ Dos variantes: **development** (con Xdebug y Symfony CLI) y **production** (opti
 
 
 
-Imagen Docker lista para producción con **Nginx + PHP 8.X FPM + Supervisor** optimizada para aplicaciones Symfony. Incluye dos targets: **development** (con Xdebug y herramientas de desarrollo) y **production** (optimizada para rendimiento).
+Imagen Docker lista para producción con **Nginx + PHP-8.X FPM + Supervisor** optimizada para aplicaciones Symfony. Incluye dos targets: **development** (con Xdebug y herramientas de desarrollo) y **production** (optimizada para rendimiento).
 
 ---
 
