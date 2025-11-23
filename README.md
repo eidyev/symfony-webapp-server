@@ -167,6 +167,45 @@ DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:5432/${DB_DATABA
 MAILER_DSN=smtp://mailpit:1025
 ```
 
+### Optional deploy/ folder (first-run & update automation)
+
+If your Symfony app includes a deploy/ folder at the project root (mounted as /var/www/html/deploy inside the container), the image can automatically run custom commands on first run and on version changes.
+
+Expected structure:
+
+/deploy/ firstrun.cmds # commands executed ONLY once (first container start) updtrun.cmds # commands executed when the app version changes version # current app version (e.g. 1.0.0)
+
+    firstrun.cmds – runs only the first time the container starts with that volume (e.g. composer install, DB creation, initial migrations, seeds, etc.).
+
+    updtrun.cmds – runs only when deploy/version changes (e.g. migrations, cache warmup, data updates).
+
+    version – plain text file with any version string you like (1, 1.0.0, 2025-11-22, …).
+
+To apply an update:
+
+Change your code.
+
+Update the value in deploy/version (for example 1.0.0 → 1.1.0).
+
+Restart the container:
+
+docker restart <container-name>
+
+On restart, the entrypoint will:
+
+Run firstrun.cmds only once (first ever start).
+
+Run updtrun.cmds only when the version value changes.
+
+Do nothing if the version is the same.
+
+
+
+
+
+
+
+
 ## 📚 Documentation
 
 For detailed usage instructions, see [HOW-TO-USE.md](HOW-TO-USE.md)

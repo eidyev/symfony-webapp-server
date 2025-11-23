@@ -370,6 +370,41 @@ symfony check:requirements
 symfony server:dump  # Ver requests HTTP
 ```
 
+Tambien puede crear la carpeta 'deploy/' opcional (automatización de primera ejecución y actualización)
+
+Si tu aplicación Symfony incluye una carpeta 'deploy/' en la raíz del proyecto (montada como /var/www/html/deploy dentro del contenedor), la imagen puede ejecutar automáticamente comandos personalizados en la primera ejecución y al cambiar de versión.
+
+Estructura esperada:
+
+    /deploy/ 
+        firstrun.cmds # comandos ejecutados SOLO una vez (primer inicio del contenedor) 
+        updtrun.cmds # comandos ejecutados cuando cambia la versión de la aplicación 
+        version # versión actual de la aplicación (p. ej., 1.0.0)
+
+- firstrun.cmds: se ejecuta solo la primera vez que el contenedor se inicia con ese volumen (p. ej., instalación de Composer, creación de la base de datos, migraciones iniciales, semillas, etc.).
+ 
+- updtrun.cmds: se ejecuta solo cuando cambia 'deploy/version' (p. ej., migraciones, preparación de caché, actualizaciones de datos).
+
+- version: archivo de texto sin formato con la cadena de versión que desees (1, 1.0.0, 2025-11-22, etc.).
+
+Para aplicar una actualización:
+
+Cambie el código.
+
+Actualice el valor en `deployment/version` (por ejemplo, 1.0.0 → 1.1.0).
+
+Reinicie el contenedor:
+
+    docker restart <nombre-del-contenedor>
+
+Al reiniciar, el punto de entrada del contenedor:
+
+    Ejecutará `firstrun.cmds` solo una vez (el primer inicio).
+
+    Ejecutará `updtrun.cmds` solo cuando cambie el valor de la versión.
+
+    No hará nada si la versión es la misma.
+
 ---
 
 ## 🎯 Casos de Uso
